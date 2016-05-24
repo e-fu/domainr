@@ -46,10 +46,10 @@
 
     Domainr.Search.find("gruener+kaffee", %Domainr.Search{location: "de"})
     # Shortcut
-    Domainr.Search.locale_find("gruener+kaffe", "de")
+    Domainr.Search.locale_find("gruener+kaffee", "de")
 
     # You have some TLDs in mind?
-    Domainr.Search.find("green+coffee"), %Domainr.Search(defaults: "coffee,club")
+    Domainr.Search.find("green+coffee", %Domainr.Search{defaults: "coffee,club"})
 
 
 ## Authorship and License

@@ -16,7 +16,7 @@ defmodule Domainr.Mixfile do
     ]
   end
 
-  def description do
+  defp description do
     ~S"""
     Domainr is an [Domainr wrapper for](https://domainr.build) in Elixir that
     makes it easy to search and find available domains and TLDs.
@@ -25,6 +25,8 @@ defmodule Domainr.Mixfile do
 
   def package do
     [
+      name: :domainr,
+      # files: ["lib", "mix.exs", "README*", "LICENSE*"],
       maintainers: ["E.FU"],
       licenses: ["MIT"],
       links: %{GitHub: "https://github.com/e-fu/domainr"}
