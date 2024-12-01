@@ -35,7 +35,6 @@ defmodule Domainr.Mixfile do
 
   def application do
     [
-      extra_applications: [:logger],
       mod: {Domainr, []}
     ]
   end

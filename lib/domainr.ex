@@ -14,7 +14,6 @@ defmodule Domainr do
       %{"results" => [...]}
   """
   use Application
-  require Logger
 
   @impl true
   def start(_type, _args) do
@@ -31,7 +30,7 @@ defmodule Domainr do
   end
 
   defp base_url do
-    "https://domainr.p.rapidapi.com"
+    Application.get_env(:domainr, :base_url, "https://domainr.p.rapidapi.com")
   end
 
   defp process_url(url) do
@@ -40,7 +39,7 @@ defmodule Domainr do
 
   defp process_request_headers(headers) do
     [
-      {"x-rapidapi-host", "domainr.p.rapidapi.com"},
+      {"x-rapidapi-host", URI.parse(base_url()).host},
       {"x-rapidapi-key", key()},
       {"Accept", "application/json"} | headers
     ]
@@ -70,12 +69,18 @@ defmodule Domainr do
       {:ok, %Finch.Response{status: 200, body: body}} ->
         process_response_body(body)
 
+      {:ok, %Finch.Response{status: 302, headers: headers}} ->
+        location = List.keyfind(headers, "location", 0)
+
+        case location do
+          {"location", redirect_url} -> %{"redirect_url" => redirect_url}
+          _ -> raise "HTTP request failed with status 302 but no location header found"
+        end
+
       {:ok, %Finch.Response{status: status, body: body}} ->
-        Logger.error("HTTP request failed with status #{status}: #{body}")
         raise "HTTP request failed with status #{status}: #{body}"
 
       {:error, reason} ->
-        Logger.error("HTTP request failed: #{reason}")
         raise "HTTP request failed: #{reason}"
     end
   end
