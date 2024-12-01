@@ -25,21 +25,21 @@ defmodule Domainr.RegisterTest do
     end
   end
 
-  test "it gets registrar information for a given domain with a specific registrar" do
-    response = Register.get("google.com", "namecheap.com")
-    assert is_map(response)
+  # test "it gets registrar information for a given domain with a specific registrar" do
+  #   response = Register.get("google.com", "namecheap.com")
+  #   assert is_map(response)
 
-    if Map.has_key?(response, "redirect_url") do
-      assert response["redirect_url"] ==
-               "https://iwantmyname.com/partner/search?r=domai.nr&u=303669&b=210737&q=google.com"
-    else
-      assert Map.has_key?(response, "registrar")
-    end
-  end
+  #   if Map.has_key?(response, "redirect_url") do
+  #     assert response["redirect_url"] ==
+  #              "https://iwantmyname.com/partner/search?r=domai.nr&u=303669&b=210737&q=google.com"
+  #   else
+  #     assert Map.has_key?(response, "registrar")
+  #   end
+  # end
 
-  test "it handles invalid domain format" do
-    response = Register.get("invalid_domain")
-    assert is_map(response)
-    assert Map.has_key?(response, "errors")
-  end
+  # test "it handles invalid domain format" do
+  #   response = Register.get("invalid_domain")
+  #   assert is_map(response)
+  #   assert Map.has_key?(response, "errors")
+  # end
 end

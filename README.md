@@ -23,11 +23,21 @@ def application do
 end
 ```
 
-3. Add your API key from RAPIDAPI
+3. Add your API key from RAPIDAPI or Domainr
 
+For RapidAPI (free or non-commercial use):
 ```sh
 export RAPIDAPI_KEY="YOUR_API_KEY"
 ```
+
+_or_
+
+For high-volume, commercial use:
+```sh
+export DOMAINR_API_KEY="YOUR_API_KEY"
+```
+and set 4. as it is no longer optional.
+
 
 4. (Optional) Set the base URL for the API:
 

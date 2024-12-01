@@ -26,7 +26,8 @@ defmodule Domainr do
   end
 
   def key do
-    System.get_env("RAPIDAPI_KEY") || raise "RAPIDAPI_KEY not set in environment"
+    System.get_env("RAPIDAPI_KEY") || System.get_env("DOMAINR_API_KEY") ||
+      raise "API key not set in environment"
   end
 
   defp base_url do
@@ -38,11 +39,18 @@ defmodule Domainr do
   end
 
   defp process_request_headers(headers) do
-    [
-      {"x-rapidapi-host", URI.parse(base_url()).host},
-      {"x-rapidapi-key", key()},
-      {"Accept", "application/json"} | headers
-    ]
+    if String.contains?(base_url(), "rapidapi") do
+      [
+        {"x-rapidapi-host", URI.parse(base_url()).host},
+        {"x-rapidapi-key", key()},
+        {"Accept", "application/json"} | headers
+      ]
+    else
+      [
+        {"Authorization", "Bearer " <> key()},
+        {"Accept", "application/json"} | headers
+      ]
+    end
   end
 
   defp process_response_body(body) do
