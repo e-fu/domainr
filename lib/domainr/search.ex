@@ -30,15 +30,18 @@ defmodule Domainr.Search do
       iex> Domainr.Search.find("acme+cafe")
       %{"results" => [...]}
   """
-  def find(terms) do
-    result = Domainr.get!("/v2/search?query=" <> URI.encode(terms))
+  def find(terms) when is_binary(terms) and terms != "" do
+    sanitized_terms = URI.encode(terms)
+    result = Domainr.get!("/v2/search?query=" <> sanitized_terms)
 
     case result do
       %{"errors" => _} -> result["errors"]
       %{"results" => _} -> result["results"]
-      _ -> result
+      _ -> []
     end
   end
+
+  def find(_terms), do: []
 
   @doc """
   Search for terms and get some domain suggestions with additional parameters.

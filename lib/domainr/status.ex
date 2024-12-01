@@ -53,7 +53,10 @@ defmodule Domainr.Status do
     |> Enum.map(&"#{domain}#{&1}")
     |> Enum.join(",")
     |> get()
-    |> find_inactive()
+    |> case do
+      %{"errors" => _} = error -> error
+      status -> find_inactive(status)
+    end
   end
 
   defp find_inactive(results) do

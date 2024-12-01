@@ -30,8 +30,12 @@ defmodule Domainr do
     System.get_env("RAPIDAPI_KEY") || raise "RAPIDAPI_KEY not set in environment"
   end
 
+  defp base_url do
+    "https://domainr.p.rapidapi.com"
+  end
+
   defp process_url(url) do
-    "https://domainr.p.rapidapi.com" <> url
+    base_url() <> url
   end
 
   defp process_request_headers(headers) do
