@@ -20,11 +20,11 @@
 3. Add your API key from [mashape](http://docs.mashape.com/api-keys):
 
         # Step 1 (in your ENV)
-        export MASHAPE_KEY="YOUR_API_KEY"
+        export RAPIDAPI_KEY="YOUR_API_KEY"
 
         # Step 2 (optional)
-        config :mashape,
-          key: System.get_env("MASHAPE_KEY")
+        config :rapidapi,
+          key: System.get_env("RAPIDAPI_KEY")
 
 ## Usage
 

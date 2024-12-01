@@ -1,63 +1,84 @@
 defmodule Domainr.Search do
   @moduledoc """
-  Domainr search function(s)
+  Domainr search function(s).
+
+  This module provides functions to search for domain names using the Domainr API.
+
+  ## Examples
+
+      iex> Domainr.Search.find("acme+cafe")
+      %{"results" => [...]}
+
+      iex> Domainr.Search.find("acme+cafe", %Domainr.Search{location: "de", registrar: "namecheap.com", defaults: "bike,cab"})
+      %{"results" => [...]}
+
+      iex> Domainr.Search.locale_find("acme+cafe", "de")
+      %{"results" => [...]}
   """
   alias __MODULE__
   defstruct defaults: "", location: "", registrar: ""
 
   @doc """
   Search for terms and get some domain suggestions.
-  # Term(s) to search against (required).
-  `acme+cafe`
 
-  # Example:
-      find("acme+cafe")
+  ## Parameters
+
+    - `terms`: The term(s) to search against (required).
+
+  ## Examples
+
+      iex> Domainr.Search.find("acme+cafe")
+      %{"results" => [...]}
   """
   def find(terms) do
-    result = Domainr.get!("/v2/search?query=" <> terms).body
+    result = Domainr.get!("/v2/search?query=" <> URI.encode(terms))
+
     case result do
-      %{"errors" => _ } ->  result["errors"]
-      %{"results" => _ } -> result["results"]
+      %{"errors" => _} -> result["errors"]
+      %{"results" => _} -> result["results"]
       _ -> result
     end
   end
 
-  def locale_find(terms, locale) do
-    find(terms, %Domainr.Search{location: locale})
-  end
+  @doc """
+  Search for terms and get some domain suggestions with additional parameters.
 
-  @doc ~S"""
-  Search for terms and get some domain suggestions.
+  ## Parameters
 
-  # Term(s) to search against (required).
+    - `terms`: The term(s) to search against (required).
+    - `search`: A `%Domainr.Search{}` struct with optional parameters.
 
-  `"acme+cafe"`
+  ## Examples
 
-  # location (optional)
-  Optionally for country-code zones, with a two-character country code.
-
-  `location: "de"`
-
-  # registrar (optional)
-  The domain name of a specific registrar to filter results by that registrar’s supported list of extensions (optional).
-
-  `registrar: "namecheap.com"`
-
-  # defaults (optional)
-  Optional comma-separated list of default zones to include in the response.
-
-  `defaults: "bike,cab"`
-
-  # Example:
-      find("acme+cafe", %Domainr.Search{location: "de",
-      registrar: "namecheap.com", defaults: "bike,cab"})
+      iex> Domainr.Search.find("acme+cafe", %Domainr.Search{location: "de", registrar: "namecheap.com", defaults: "bike,cab"})
+      %{"results" => [...]}
   """
   def find(terms, %Search{defaults: defaults, location: location, registrar: registrar}) do
-    new_term = terms <>
-      "&defaults="   <> defaults  <>
-      "&location="   <> location  <>
-      "&registrar="  <> registrar
+    new_term =
+      terms <>
+        "&defaults=" <>
+        URI.encode(defaults) <>
+        "&location=" <>
+        URI.encode(location) <>
+        "&registrar=" <> URI.encode(registrar)
 
     find(new_term)
+  end
+
+  @doc """
+  Search for terms and get some domain suggestions for a specific locale.
+
+  ## Parameters
+
+    - `terms`: The term(s) to search against (required).
+    - `locale`: The locale to search in (required).
+
+  ## Examples
+
+      iex> Domainr.Search.locale_find("acme+cafe", "de")
+      %{"results" => [...]}
+  """
+  def locale_find(terms, locale) do
+    find(terms, %Domainr.Search{location: locale})
   end
 end
